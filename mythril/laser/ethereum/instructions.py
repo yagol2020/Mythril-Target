@@ -1,5 +1,6 @@
 """This module contains a representation class for EVM instructions and
 transitions between them."""
+import json
 import logging
 
 from copy import copy, deepcopy
@@ -1570,6 +1571,16 @@ class Instruction:
             global_state.mstate.min_gas_used += min_gas
             global_state.mstate.max_gas_used += max_gas
             return [global_state]
+
+        target_json=json.load(open("/home/yagol/Desktop/Smart-Target/target_file/target.json","r"))
+        skip_fall_to=False
+        skip_jumpi=False
+        if target_json['target']:
+            if hex(jump_addr) in target_json.keys() and target_json[hex(jump_addr)]==False:
+                skip_jumpi=True
+            fall_to_addr=disassembly.instruction_list[global_state.mstate.pc+1]['address']
+            if hex(fall_to_addr) in target_json.keys() and target_json[hex(fall_to_addr)]==False:
+                skip_fall_to=True
         # False case
         negated = (
             simplify(Not(condition)) if isinstance(condition, Bool) else condition == 0
@@ -1586,7 +1597,8 @@ class Instruction:
             isinstance(condi, Bool) and not is_false(condi)
         )
 
-        if negated_cond:
+        if negated_cond and not skip_fall_to:
+            log.debug(f"append state pc fall to : {disassembly.instruction_list[global_state.mstate.pc+1]['address']}")
             new_state = copy(global_state)
             # add JUMPI gas cost
             new_state.mstate.min_gas_used += min_gas
@@ -1611,7 +1623,8 @@ class Instruction:
         instr = disassembly.instruction_list[index]
 
         if instr["opcode"] == "JUMPDEST":
-            if positive_cond:
+            if positive_cond and not skip_jumpi:
+                log.debug("append state pc jumpdest: " + str(instr["address"]))
                 new_state = copy(global_state)
                 # add JUMPI gas cost
                 new_state.mstate.min_gas_used += min_gas
@@ -1740,7 +1753,16 @@ class Instruction:
             global_state.mstate.stack.append(1)
             log.debug("No code found for trying to execute a create type instruction.")
             return [global_state]
-
+        skip_jumpi=False
+        skip_fall_to=False
+        target_map=json.load(open("/home/yagol/Desktop/Smart-Target/target_file/target.json","r"))
+        if target_map['target']:
+            if hex(jump_addr) in target_map and target_map[hex(jump_addr)]==False:
+                log.debug(f"skip jumpi, {jump_addr}")
+                skip_jumpi=True
+            if hex(disassembly.instruction_list[global_state.mstate.pc+1]['address']) in target_map and target_map[hex(disassembly.instruction_list[global_state.mstate.pc+1]['address'])]==False:
+                log.debug(f"skip jumpi fall to, {disassembly.instruction_list[global_state.mstate.pc+1]['address']}")
+                skip_fall_to=True
         code_str = bytes.hex(bytes(code_raw))
 
         next_transaction_id = tx_id_manager.get_next_tx_id()
