@@ -66,8 +66,8 @@ class InstructionCoveragePlugin(LaserPlugin):
                         cov_percentage, string_code
                     )
                 )
-                output_dir=json.load(open("/home/yagol/Desktop/Smart-Target/target_file/target.json","r"))["output_dir"]
-                is_target=json.load(open("/home/yagol/Desktop/Smart-Target/target_file/target.json","r"))["target"]
+                output_dir=json.load(open("/root/smart_target/target_file/target.json","r"))["output_dir"]
+                is_target=json.load(open("/root/smart_target/target_file/target.json","r"))["target"]
                 is_target = "target" if is_target else "fully"
                 with open(output_dir+f"/coverage_{is_target}.txt", "a") as f:
                     f.write("Achieved {:.2f}% coverage for code: {}".format(

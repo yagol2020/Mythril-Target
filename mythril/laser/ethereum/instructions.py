@@ -1572,7 +1572,7 @@ class Instruction:
             global_state.mstate.max_gas_used += max_gas
             return [global_state]
 
-        target_json=json.load(open("/home/yagol/Desktop/Smart-Target/target_file/target.json","r"))
+        target_json=json.load(open("/root/smart_target/target_file/target.json","r"))
         skip_fall_to=False
         skip_jumpi=False
         if target_json['target']:
