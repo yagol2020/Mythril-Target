@@ -8,7 +8,7 @@ from mythril.laser.ethereum.state.global_state import GlobalState
 from typing import Dict, Tuple, List
 
 import logging
-
+import mythril.target_info
 log = logging.getLogger(__name__)
 
 
@@ -66,8 +66,8 @@ class InstructionCoveragePlugin(LaserPlugin):
                         cov_percentage, string_code
                     )
                 )
-                output_dir=json.load(open("/root/smart_target/target_file/target.json","r"))["output_dir"]
-                is_target=json.load(open("/root/smart_target/target_file/target.json","r"))["target"]
+                output_dir=json.load(open(mythril.target_info.target_json_path,"r"))["output_dir"]
+                is_target=json.load(open(mythril.target_info.target_json_path,"r"))["target"]
                 is_target = "target" if is_target else "fully"
                 with open(output_dir+f"/coverage_{is_target}.txt", "a") as f:
                     f.write("Achieved {:.2f}% coverage for code: {}".format(

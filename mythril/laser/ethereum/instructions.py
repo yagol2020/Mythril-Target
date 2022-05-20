@@ -65,7 +65,7 @@ from mythril.laser.ethereum.transaction import (
 from mythril.support.support_utils import get_code_hash
 
 from mythril.support.loader import DynLoader
-
+import mythril.target_info
 log = logging.getLogger(__name__)
 
 TT256 = symbol_factory.BitVecVal(0, 256)
@@ -1572,7 +1572,7 @@ class Instruction:
             global_state.mstate.max_gas_used += max_gas
             return [global_state]
 
-        target_json=json.load(open("/root/smart_target/target_file/target.json","r"))
+        target_json=json.load(open(mythril.target_info.target_json_path,"r"))
         skip_fall_to=False
         skip_jumpi=False
         if target_json['target']:

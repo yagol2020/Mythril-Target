@@ -13,7 +13,7 @@ import sys
 
 import coloredlogs
 import traceback
-from ast import literal_eval
+from ast import arg, literal_eval
 
 import mythril.support.signatures as sigs
 from argparse import ArgumentParser, Namespace, RawTextHelpFormatter
@@ -32,7 +32,7 @@ from mythril.analysis.module import ModuleLoader
 from mythril.analysis.report import Report
 
 from mythril.__version__ import __version__ as VERSION
-
+import mythril.target_info
 # Initialise core Mythril Component
 _ = MythrilPluginLoader()
 
@@ -249,6 +249,7 @@ def main() -> None:
     parser.add_argument(
         "-v", type=int, help="log level (0-5)", metavar="LOG_LEVEL", default=2
     )
+    parser.add_argument("-y","--yagol",type=str,help="target json path")
 
     subparsers = parser.add_subparsers(dest="command", help="Commands")
     safe_function_parser = subparsers.add_parser(
@@ -332,6 +333,7 @@ def main() -> None:
     # Get config values
 
     args = parser.parse_args()
+    mythril.target_info.target_json_path=args.yagol
     parse_args_and_execute(parser=parser, args=args)
 
 
