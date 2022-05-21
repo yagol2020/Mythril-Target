@@ -1753,16 +1753,7 @@ class Instruction:
             global_state.mstate.stack.append(1)
             log.debug("No code found for trying to execute a create type instruction.")
             return [global_state]
-        skip_jumpi=False
-        skip_fall_to=False
-        target_map=json.load(open("/home/yagol/Desktop/Smart-Target/target_file/target.json","r"))
-        if target_map['target']:
-            if hex(jump_addr) in target_map and target_map[hex(jump_addr)]==False:
-                log.debug(f"skip jumpi, {jump_addr}")
-                skip_jumpi=True
-            if hex(disassembly.instruction_list[global_state.mstate.pc+1]['address']) in target_map and target_map[hex(disassembly.instruction_list[global_state.mstate.pc+1]['address'])]==False:
-                log.debug(f"skip jumpi fall to, {disassembly.instruction_list[global_state.mstate.pc+1]['address']}")
-                skip_fall_to=True
+
         code_str = bytes.hex(bytes(code_raw))
 
         next_transaction_id = tx_id_manager.get_next_tx_id()
