@@ -1578,9 +1578,11 @@ class Instruction:
         if target_json['target']:
             if hex(jump_addr) in target_json.keys() and target_json[hex(jump_addr)]==False:
                 skip_jumpi=True
+                log.info(f"smart_target: SKIP JUMPI {jump_addr}({hex(jump_addr)})")
             fall_to_addr=disassembly.instruction_list[global_state.mstate.pc+1]['address']
             if hex(fall_to_addr) in target_json.keys() and target_json[hex(fall_to_addr)]==False:
                 skip_fall_to=True
+                log.info(f"smart_target: SKIP FALL_TO {fall_to_addr}({hex(fall_to_addr)})")
         # False case
         negated = (
             simplify(Not(condition)) if isinstance(condition, Bool) else condition == 0
