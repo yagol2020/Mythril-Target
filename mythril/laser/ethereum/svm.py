@@ -1,4 +1,5 @@
 """This module implements the main symbolic execution engine."""
+import json
 import logging
 from collections import defaultdict
 from copy import copy
@@ -29,7 +30,7 @@ from mythril.laser.ethereum.transaction import (
 )
 from mythril.laser.smt import symbol_factory
 from mythril.support.support_args import args
-
+import mythril.target_info
 log = logging.getLogger(__name__)
 
 
@@ -183,6 +184,9 @@ class LaserEVM:
                     len(self.open_states)
                 )
             )
+            output_dir=json.load(open(mythril.target_info.target_json_path,"r"))
+            output_dir['is_create']=True
+            json.dump(output_dir,open(mythril.target_info.target_json_path,"w"))
 
             if len(self.open_states) == 0:
                 log.warning(
