@@ -135,7 +135,7 @@ def solc_exists(version):
     return solc_binary
 
 
-all_versions = solcx.get_installable_solc_versions()
+# all_versions = solcx.get_installable_solc_versions()
 
 
 def extract_version(file: str) -> Optional[str]:
